@@ -33,4 +33,4 @@ La kata se ha repetido en 3 ramas distintas (`develop1`, `develop2` y `develop3`
 3. Ejecutar: `java -cp out software.ulpgc.katas.Main`
 
 ## Vídeo Explicativo
-[AÑADIR ENLACE AQUÍ]
+https://drive.google.com/file/d/1N-g6WbwYFlR-TiFQvJSjkxyhwozWk3NZ/view?usp=drive_link

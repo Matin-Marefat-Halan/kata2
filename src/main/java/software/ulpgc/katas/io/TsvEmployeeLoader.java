@@ -14,28 +14,33 @@ public class TsvEmployeeLoader implements EmployeeLoader {
     @Override
     public List<Employee> load(InputStream is) {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
-            return reader.lines()
-                    .skip(1) // Nos saltamos la cabecera
-                    .map(this::toEmployee) // Transformamos cada línea a un Optional<Employee>
-                    .flatMap(Optional::stream) // Filtra automáticamente los vacíos sin usar "if"
-                    .toList();
+            return load(reader);
         } catch (Exception e) {
-            return List.of(); // Si hay error, devolvemos lista vacía (sin devolver null)
+            return List.of();
         }
     }
 
+    private List<Employee> load(BufferedReader reader) {
+        return reader.lines()
+                .skip(1)
+                .map(this::toEmployee)
+                .flatMap(Optional::stream)
+                .toList();
+    }
+
     private Optional<Employee> toEmployee(String line) {
-        String[] fields = line.split("\t");
+        return toEmployee(line.split("\t"));
+    }
+
+    private Optional<Employee> toEmployee(String[] fields) {
         try {
-            return Optional.of(new Employee(
-                    fields[0], // Name
-                    fields[4], // Department
-                    Gender.valueOf(fields[5]) // Gender
-            ));
+            return Optional.of(new Employee(fields[0], fields[4], toGender(fields[5])));
         } catch (Exception e) {
-            // Si la fila está mal formada o el género está vacío
-            // devolvemos Optional.empty() para que el flatMap la descarte silenciosamente.
             return Optional.empty();
         }
+    }
+
+    private Gender toGender(String field) {
+        return Gender.valueOf(field);
     }
 }
